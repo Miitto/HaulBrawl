@@ -35,15 +35,6 @@ void AHaulBrawlPlayerController::SetupInputComponent()
 				Subsystem->AddMappingContext(CurrentContext, 0);
 			}
 
-			// only add these IMCs if we're not using mobile touch input
-			if (!ShouldUseTouchControls())
-			{
-				for (UInputMappingContext* CurrentContext : MobileExcludedMappingContexts)
-				{
-					Subsystem->AddMappingContext(CurrentContext, 0);
-				}
-			}
-
 			if (bUseSteeringWheelControls)
 			{
 				Subsystem->AddMappingContext(SteeringWheelInputMappingContext, 0);
@@ -54,23 +45,6 @@ void AHaulBrawlPlayerController::SetupInputComponent()
 	// only spawn UI on local player controllers
 	if (IsLocalPlayerController())
 	{
-		if (ShouldUseTouchControls())
-		{
-			// spawn the mobile controls widget
-			MobileControlsWidget = CreateWidget<UUserWidget>(this, MobileControlsWidgetClass);
-
-			if (MobileControlsWidget)
-			{
-				// add the controls to the player screen
-				MobileControlsWidget->AddToPlayerScreen(0);
-
-			} else {
-
-				UE_LOG(LogHaulBrawl, Error, TEXT("Could not spawn mobile controls widget."));
-
-			}
-		}
-		
 
 		// spawn the UI widget and add it to the viewport
 		VehicleUI = CreateWidget<UHaulBrawlUI>(this, VehicleUIClass);
@@ -126,10 +100,4 @@ void AHaulBrawlPlayerController::OnPawnDestroyed(AActor* DestroyedPawn)
 			Possess(RespawnedVehicle);
 		}
 	}
-}
-
-bool AHaulBrawlPlayerController::ShouldUseTouchControls() const
-{
-	// are we on a mobile platform? Should we force touch?
-	return SVirtualJoystick::ShouldDisplayTouchInterface() || bForceTouchControls;
 }

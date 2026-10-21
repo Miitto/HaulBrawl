@@ -25,22 +25,6 @@ protected:
 	UPROPERTY(EditAnywhere, Category ="Input|Input Mappings")
 	TArray<UInputMappingContext*> DefaultMappingContexts;
 
-	/** Input Mapping Contexts */
-	UPROPERTY(EditAnywhere, Category="Input|Input Mappings")
-	TArray<UInputMappingContext*> MobileExcludedMappingContexts;
-
-	/** Mobile controls widget to spawn */
-	UPROPERTY(EditAnywhere, Category="Input|Touch Controls")
-	TSubclassOf<UUserWidget> MobileControlsWidgetClass;
-
-	/** Pointer to the mobile controls widget */
-	UPROPERTY()
-	TObjectPtr<UUserWidget> MobileControlsWidget;
-
-	/** If true, the player will use UMG touch controls even if not playing on mobile platforms */
-	UPROPERTY(EditAnywhere, Config, Category = "Input|Touch Controls")
-	bool bForceTouchControls = false;
-
 	/** If true, the optional steering wheel input mapping context will be registered */
 	UPROPERTY(EditAnywhere, Category = "Input|Steering Wheel Controls")
 	bool bUseSteeringWheelControls = false;
@@ -87,7 +71,4 @@ protected:
 	/** Handles pawn destruction and respawning */
 	UFUNCTION()
 	void OnPawnDestroyed(AActor* DestroyedPawn);
-
-	/** Returns true if the player should use UMG touch controls */
-	bool ShouldUseTouchControls() const;
 };
