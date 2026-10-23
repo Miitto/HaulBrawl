@@ -3,18 +3,17 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "HaulBrawlPawn.h"
+#include "HaulBrawlVehiclePawn.h"
+
 #include "HaulBrawlSportsCar.generated.h"
 
 /**
  *  Sports car wheeled vehicle implementation
  */
 UCLASS(abstract)
-class AHaulBrawlSportsCar : public AHaulBrawlPawn
-{
-	GENERATED_BODY()
-	
-public:
+class AHaulBrawlSportsCar : public AHaulBrawlVehiclePawn {
+  GENERATED_BODY()
 
-	AHaulBrawlSportsCar();
+public:
+  AHaulBrawlSportsCar();
 };

@@ -1,0 +1,12 @@
+---
+# We'll use defaults from the LLVM style
+BasedOnStyle: LLVM
+IndentWidth: 2
+ColumnLimit: 140
+---
+Language: Cpp
+# Force pointers to the type for C++.
+DerivePointerAlignment: false
+PointerAlignment: Left
+FixNamespaceComments: true
+NamespaceIndentation: All
