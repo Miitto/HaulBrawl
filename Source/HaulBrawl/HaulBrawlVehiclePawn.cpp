@@ -299,7 +299,9 @@ void AHaulBrawlVehiclePawn::FlippedCheck() {
 FVector3d AHaulBrawlVehiclePawn::GetOnFootSpawnOffset() const { return OnFootSpawnOffset; }
 
 FVector3d AHaulBrawlVehiclePawn::GetOnFootSpawnLocation() const {
-  return GetActorLocation() + GetActorRotation().RotateVector(OnFootSpawnOffset);
+  FRotator rot{};
+  rot.Yaw = GetActorRotation().Yaw;
+  return GetActorLocation() + rot.RotateVector(OnFootSpawnOffset);
 }
 
 #undef LOCTEXT_NAMESPACE
