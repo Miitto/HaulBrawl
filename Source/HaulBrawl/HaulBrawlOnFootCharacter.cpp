@@ -1,9 +1,12 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "HaulBrawlOnFootCharacter.h"
+#include "Camera/CameraComponent.h"
 #include "EnhancedInputComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "HaulBrawl.h"
+#include <HaulBrawlPlayerController.h>
+#include <HaulBrawlVehiclePawn.h>
 
 // Sets default values
 AHaulBrawlOnFootCharacter::AHaulBrawlOnFootCharacter() {
@@ -17,7 +20,45 @@ AHaulBrawlOnFootCharacter::AHaulBrawlOnFootCharacter() {
 void AHaulBrawlOnFootCharacter::BeginPlay() { Super::BeginPlay(); }
 
 // Called every frame
-void AHaulBrawlOnFootCharacter::Tick(float DeltaTime) { Super::Tick(DeltaTime); }
+void AHaulBrawlOnFootCharacter::Tick(float DeltaTime) {
+  Super::Tick(DeltaTime);
+  TimeTillVehicleScan += DeltaTime;
+
+  if (TimeTillVehicleScan >= VehicleScanInterval) {
+    TimeTillVehicleScan = 0.f;
+
+    auto lastHighlightedVehicle = CurrentlyHighlightedVehicle;
+    CurrentlyHighlightedVehicle = nullptr;
+
+    // scan for vehicles in front of the player camera and highlight the closest one
+    auto camera = GetComponentByClass<UCameraComponent>();
+    FVector Start = GetActorLocation();
+    FVector ForwardVector = camera->GetForwardVector();
+    FVector End = Start + (ForwardVector * VehicleScanDistance);
+    FCollisionQueryParams CollisionParams;
+    CollisionParams.AddIgnoredActor(this);
+
+    TArray<FHitResult> HitResults;
+    float currentDistance = TNumericLimits<float>::Max();
+    GetWorld()->LineTraceMultiByChannel(HitResults, Start, End, ECC_Vehicle, CollisionParams);
+    for (const FHitResult& Hit : HitResults) {
+      AHaulBrawlVehiclePawn* VehiclePawn = Cast<AHaulBrawlVehiclePawn>(Hit.GetActor());
+      if (Hit.Distance < currentDistance && VehiclePawn) {
+        currentDistance = Hit.Distance;
+
+        CurrentlyHighlightedVehicle = VehiclePawn;
+      }
+    }
+
+    if (lastHighlightedVehicle && lastHighlightedVehicle != CurrentlyHighlightedVehicle) {
+      lastHighlightedVehicle->SetNotFocused();
+
+      if (CurrentlyHighlightedVehicle) {
+        CurrentlyHighlightedVehicle->SetFocused();
+      }
+    }
+  }
+}
 
 // Called to bind functionality to input
 void AHaulBrawlOnFootCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) {
@@ -63,4 +104,11 @@ void AHaulBrawlOnFootCharacter::DoLook(const FVector2D& LookValue) {
   AddControllerPitchInput(LookValue.Y);
 }
 
-void AHaulBrawlOnFootCharacter::DoGetIn() { UE_LOGF(LogHaulBrawl, Display, "Getting in vehicle"); }
+void AHaulBrawlOnFootCharacter::DoGetIn() {
+  if (CurrentlyHighlightedVehicle) {
+    auto PC = Cast<AHaulBrawlPlayerController>(GetController());
+    PC->GetInVehicle(CurrentlyHighlightedVehicle);
+  } else {
+    UE_LOG(LogHaulBrawl, Warning, TEXT("No vehicle in range to get in."));
+  }
+}

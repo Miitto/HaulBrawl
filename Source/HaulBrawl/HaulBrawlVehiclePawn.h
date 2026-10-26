@@ -119,6 +119,8 @@ public:
   FVector3d GetOnFootSpawnLocation() const;
 
   // End Actor interface
+  void SetFocused();
+  void SetNotFocused();
 
 protected:
   /** Handles steering input */
@@ -192,6 +194,12 @@ public:
 
   UFUNCTION(BlueprintCallable, Category = "Input")
   void DoGetOut();
+
+  UFUNCTION(BlueprintCallable, Category = "Events")
+  void OnGetOut();
+
+  UFUNCTION(BlueprintCallable, Category = "Events")
+  void OnGetIn();
 
 protected:
   /** Called when the brake lights are turned on or off */

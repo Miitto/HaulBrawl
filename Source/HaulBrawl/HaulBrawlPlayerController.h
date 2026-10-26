@@ -66,6 +66,7 @@ protected:
 
   /** Pawn setup */
   virtual void OnPossess(APawn* InPawn) override;
+  virtual void OnUnPossess() override;
 
   /** Handles pawn destruction and respawning */
   UFUNCTION()
@@ -73,7 +74,7 @@ protected:
 
 public:
   void GetOutVehicle();
-  void GetInVehicle(TObjectPtr<AHaulBrawlVehiclePawn> veh);
+  void GetInVehicle(AHaulBrawlVehiclePawn* veh);
 
   /** Update vehicle UI on tick */
   virtual void Tick(float Delta) override;

@@ -118,6 +118,14 @@ void AHaulBrawlVehiclePawn::Tick(float Delta) {
   BackSpringArm->SetRelativeRotation(FRotator(0.0f, CameraYaw, 0.0f));
 }
 
+/* Sets the vehicle as the vehicle the player is currently looking at. */
+UFUNCTION(BlueprintCallable, Category = "UI")
+void AHaulBrawlVehiclePawn::SetFocused() {}
+
+/** Sets the vehicle as the vehicle the player is not currently looking at. */
+UFUNCTION(BlueprintCallable, Category = "UI")
+void AHaulBrawlVehiclePawn::SetNotFocused() {}
+
 void AHaulBrawlVehiclePawn::Steering(const FInputActionValue& Value) {
   // route the input
   DoSteering(Value.Get<float>());
@@ -257,6 +265,15 @@ void AHaulBrawlVehiclePawn::DoGetOut() {
   AHaulBrawlPlayerController* PC = Cast<AHaulBrawlPlayerController>(GetController());
   PC->GetOutVehicle();
 }
+
+void AHaulBrawlVehiclePawn::OnGetOut() {
+  ChaosVehicleMovement->SetThrottleInput(0.0f);
+  ChaosVehicleMovement->SetBrakeInput(0.0f);
+  ChaosVehicleMovement->SetHandbrakeInput(true);
+  ChaosVehicleMovement->SetRequiresControllerForInputs(false);
+}
+
+void AHaulBrawlVehiclePawn::OnGetIn() { ChaosVehicleMovement->SetRequiresControllerForInputs(true); }
 
 void AHaulBrawlVehiclePawn::FlippedCheck() {
   // check the difference in angle between the mesh's up vector and world up

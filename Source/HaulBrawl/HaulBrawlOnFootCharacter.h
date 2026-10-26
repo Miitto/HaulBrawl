@@ -9,6 +9,7 @@
 struct FInputActionValue;
 class UInputAction;
 class UCharacterMovementComponent;
+class AHaulBrawlVehiclePawn;
 
 UCLASS(abstract)
 class HAULBRAWL_API AHaulBrawlOnFootCharacter : public ACharacter {
@@ -25,6 +26,19 @@ protected:
   UInputAction* GetInAction;
 
   TObjectPtr<UCharacterMovementComponent> CharacterMovement;
+
+  UPROPERTY(EditAnywhere, Category = "Vehicle")
+  UMaterialInterface* VehicleOutlineMaterial;
+
+  UPROPERTY(EditAnywhere, Category = "Vehicle")
+  float VehicleScanDistance = 100.f;
+
+  UPROPERTY(EditAnywhere, Category = "Vehicle")
+  float VehicleScanInterval = 0.2f;
+
+  float TimeTillVehicleScan = 0.f;
+
+  AHaulBrawlVehiclePawn* CurrentlyHighlightedVehicle = nullptr;
 
 public:
   // Sets default values for this pawn's properties
