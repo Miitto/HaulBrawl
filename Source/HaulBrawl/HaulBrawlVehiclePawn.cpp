@@ -112,10 +112,23 @@ void AHaulBrawlVehiclePawn::Tick(float Delta) {
   GetMesh()->SetAngularDamping(bMovingOnGround ? 0.0f : 3.0f);
 
   // realign the camera yaw to face front
-  float CameraYaw = BackSpringArm->GetRelativeRotation().Yaw;
-  CameraYaw = FMath::FInterpTo(CameraYaw, 0.0f, Delta, 1.0f);
+  auto rot = BackSpringArm->GetRelativeRotation();
+  rot.Roll = 0.f;
 
-  BackSpringArm->SetRelativeRotation(FRotator(0.0f, CameraYaw, 0.0f));
+  if (TimeSinceLastCameraInput > TimeThresholdForCameraAlignment) {
+    // Align camera to move direction
+    float velocity = ChaosVehicleMovement->GetForwardSpeed();
+
+    if (velocity > VelocityThresholdForCameraAlignment) {
+      rot.Yaw = FMath::FInterpTo(rot.Yaw, 0.0f, Delta, 1.0f);
+    } else if (velocity < -VelocityThresholdForCameraAlignment) {
+      rot.Yaw = FMath::FInterpTo(rot.Yaw, 180.0f, Delta, 1.0f);
+    }
+  }
+
+  BackSpringArm->SetRelativeRotation(rot);
+
+  TimeSinceLastCameraInput += Delta;
 }
 
 /* Sets the vehicle as the vehicle the player is currently looking at. */
@@ -163,7 +176,7 @@ void AHaulBrawlVehiclePawn::StopHandbrake(const FInputActionValue& Value) {
 
 void AHaulBrawlVehiclePawn::LookAround(const FInputActionValue& Value) {
   // route the input
-  DoLookAround(Value.Get<float>());
+  DoLookAround(Value.Get<FVector2D>());
 }
 
 void AHaulBrawlVehiclePawn::ToggleCamera(const FInputActionValue& Value) {
@@ -231,9 +244,11 @@ void AHaulBrawlVehiclePawn::DoHandbrakeStop() {
   BrakeLights(false);
 }
 
-void AHaulBrawlVehiclePawn::DoLookAround(float YawDelta) {
+void AHaulBrawlVehiclePawn::DoLookAround(FVector2D LookAxis) {
   // rotate the spring arm
-  BackSpringArm->AddLocalRotation(FRotator(0.0f, YawDelta, 0.0f));
+  BackSpringArm->AddLocalRotation(FRotator(LookAxis.Y, LookAxis.X, 0.0f));
+
+  TimeSinceLastCameraInput = 0.0f;
 }
 
 void AHaulBrawlVehiclePawn::DoToggleCamera() {

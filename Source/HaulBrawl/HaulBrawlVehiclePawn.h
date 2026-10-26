@@ -75,6 +75,14 @@ protected:
   UPROPERTY(EditAnywhere, Category = "Input")
   UInputAction* GetOutAction;
 
+  UPROPERTY(EditAnywhere, Category = "Input")
+  float VelocityThresholdForCameraAlignment = 500.0f;
+
+  UPROPERTY(EditAnywhere, Category = "Input")
+  float TimeThresholdForCameraAlignment = 0.5f;
+
+  float TimeSinceLastCameraInput = 0.0f;
+
   /** Keeps track of which camera is active */
   bool bFrontCameraActive = false;
 
@@ -182,7 +190,7 @@ public:
 
   /** Handle look input by input actions or mobile interface */
   UFUNCTION(BlueprintCallable, Category = "Input")
-  void DoLookAround(float YawDelta);
+  void DoLookAround(FVector2D LookAxis);
 
   /** Handle toggle camera input by input actions or mobile interface */
   UFUNCTION(BlueprintCallable, Category = "Input")
