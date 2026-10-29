@@ -2,9 +2,9 @@
 
 #include "HaulBrawlPlayerController.h"
 #include "Blueprint/UserWidget.h"
-#include "ChaosWheeledVehicleMovementComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "GameFramework/PlayerStart.h"
+#include "HBWheeledVehicleMvmntComponent.h"
 #include "HaulBrawl.h"
 #include "HaulBrawlOnFootCharacter.h"
 #include "HaulBrawlUI.h"

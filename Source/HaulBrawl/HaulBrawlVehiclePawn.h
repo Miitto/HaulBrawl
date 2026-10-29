@@ -10,7 +10,7 @@
 class UCameraComponent;
 class USpringArmComponent;
 class UInputAction;
-class UChaosWheeledVehicleMovementComponent;
+class UHBWheeledVehicleMvmntComponent;
 struct FInputActionValue;
 
 /**
@@ -41,7 +41,7 @@ class AHaulBrawlVehiclePawn : public AWheeledVehiclePawn {
   UCameraComponent* BackCamera;
 
   /** Cast pointer to the Chaos Vehicle movement component */
-  TObjectPtr<UChaosWheeledVehicleMovementComponent> ChaosVehicleMovement;
+  TObjectPtr<UHBWheeledVehicleMvmntComponent> ChaosVehicleMovement;
 
 protected:
   /** Steering Action */
@@ -104,7 +104,7 @@ protected:
   FVector3d OnFootSpawnOffset = FVector3d(10.f, 0.f, 0.f);
 
 public:
-  AHaulBrawlVehiclePawn();
+  AHaulBrawlVehiclePawn(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 
   // Begin Pawn interface
 
@@ -228,5 +228,5 @@ public:
   /** Returns the back camera subobject */
   FORCEINLINE UCameraComponent* GetBackCamera() const { return BackCamera; }
   /** Returns the cast Chaos Vehicle Movement subobject */
-  FORCEINLINE const TObjectPtr<UChaosWheeledVehicleMovementComponent>& GetChaosVehicleMovement() const { return ChaosVehicleMovement; }
+  FORCEINLINE const TObjectPtr<UHBWheeledVehicleMvmntComponent>& GetChaosVehicleMovement() const { return ChaosVehicleMovement; }
 };

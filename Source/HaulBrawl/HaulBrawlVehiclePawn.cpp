@@ -2,11 +2,11 @@
 
 #include "HaulBrawlVehiclePawn.h"
 #include "Camera/CameraComponent.h"
-#include "ChaosWheeledVehicleMovementComponent.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "HBWheeledVehicleMvmntComponent.h"
 #include "HaulBrawl.h"
 #include "HaulBrawlPlayerController.h"
 #include "HaulBrawlWheelFront.h"
@@ -16,7 +16,9 @@
 
 #define LOCTEXT_NAMESPACE "VehiclePawn"
 
-AHaulBrawlVehiclePawn::AHaulBrawlVehiclePawn() {
+AHaulBrawlVehiclePawn::AHaulBrawlVehiclePawn(const FObjectInitializer& ObjectInitializer)
+    : Super(ObjectInitializer.SetDefaultSubobjectClass<UHBWheeledVehicleMvmntComponent>(VehicleMovementComponentName)) {
+
   // construct the front camera boom
   FrontSpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("Front Spring Arm"));
   FrontSpringArm->SetupAttachment(GetMesh());
@@ -50,7 +52,7 @@ AHaulBrawlVehiclePawn::AHaulBrawlVehiclePawn() {
   GetMesh()->SetCollisionProfileName(FName("Vehicle"));
 
   // get the Chaos Wheeled movement component
-  ChaosVehicleMovement = CastChecked<UChaosWheeledVehicleMovementComponent>(GetVehicleMovement());
+  ChaosVehicleMovement = CastChecked<UHBWheeledVehicleMvmntComponent>(GetVehicleMovement());
 }
 
 void AHaulBrawlVehiclePawn::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) {
@@ -132,11 +134,9 @@ void AHaulBrawlVehiclePawn::Tick(float Delta) {
 }
 
 /* Sets the vehicle as the vehicle the player is currently looking at. */
-UFUNCTION(BlueprintCallable, Category = "UI")
 void AHaulBrawlVehiclePawn::SetFocused() {}
 
 /** Sets the vehicle as the vehicle the player is not currently looking at. */
-UFUNCTION(BlueprintCallable, Category = "UI")
 void AHaulBrawlVehiclePawn::SetNotFocused() {}
 
 void AHaulBrawlVehiclePawn::Steering(const FInputActionValue& Value) {

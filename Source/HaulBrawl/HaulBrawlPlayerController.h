@@ -40,9 +40,8 @@ protected:
   /** Type of vehicle to automatically respawn when it's destroyed */
   UPROPERTY(EditAnywhere, Category = "Vehicle|Respawn")
   TSubclassOf<AHaulBrawlVehiclePawn> VehiclePawnClass;
-
-  /** Pointer to the controlled pawn */
-  TObjectPtr<APawn> ActivePawn;
+  UPROPERTY(EditAnywhere, Category = "On Foot|Respawn")
+  TSubclassOf<AHaulBrawlOnFootCharacter> OnFootPawnClass;
 
   /** Type of the UI to spawn */
   UPROPERTY(EditAnywhere, Category = "Vehicle|UI")
@@ -52,8 +51,12 @@ protected:
   UPROPERTY(BlueprintReadOnly)
   TObjectPtr<UHaulBrawlUI> VehicleUI;
 
-  UPROPERTY(EditAnywhere, Category = "On Foot")
-  TSubclassOf<AHaulBrawlOnFootCharacter> OnFootPawnClass;
+  /** The player's color */
+  UPROPERTY(EditAnywhere, Category = "Vanity")
+  FLinearColor PlayerColor = FLinearColor(1.0, 0.5, 0.5, 1.0);
+
+  /** Pointer to the controlled pawn */
+  TObjectPtr<APawn> ActivePawn;
 
   bool bIsInVehicle = true;
 
@@ -75,6 +78,11 @@ protected:
 public:
   void GetOutVehicle();
   void GetInVehicle(AHaulBrawlVehiclePawn* veh);
+
+  UFUNCTION(BlueprintCallable, Category = "Vanity")
+  FLinearColor GetPlayerColor() const { return PlayerColor; }
+  UFUNCTION(BlueprintCallable, Category = "Vanity")
+  void SetPlayerColor(FLinearColor NewColor) { PlayerColor = NewColor; }
 
   /** Update vehicle UI on tick */
   virtual void Tick(float Delta) override;
