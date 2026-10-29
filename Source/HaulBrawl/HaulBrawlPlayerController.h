@@ -49,7 +49,7 @@ protected:
   TSubclassOf<UHaulBrawlUI> VehicleUIClass;
 
   /** Pointer to the UI widget */
-  UPROPERTY()
+  UPROPERTY(BlueprintReadOnly)
   TObjectPtr<UHaulBrawlUI> VehicleUI;
 
   UPROPERTY(EditAnywhere, Category = "On Foot")
